@@ -83,12 +83,12 @@
     });
 
     removeButton.addEventListener('click', (event) => {
-      const oldComments = commentsElement.innerHTML;
+      // const oldComments = commentsElement.innerHTML;
+      const comments = commentsElement.innerHTML;
       const index = oldComments.lastIndexOf('<li class="comment">');
 
       if (index !== -1) {
-        const elem = oldComments.slice(index);
-        commentsElement.innerHTML = oldComments.substr(0, index);
+        commentsElement.innerHTML = comments.substr(0, index);
       }
     });
 
