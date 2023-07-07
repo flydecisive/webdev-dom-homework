@@ -82,13 +82,12 @@
       createComment(formNameElement, formTextElement, event);
     });
 
-    removeButton.addEventListener('click', (event) => {
-      // const oldComments = commentsElement.innerHTML;
-      const comments = commentsElement.innerHTML;
+    removeButton.addEventListener('click', () => {
+      const oldComments = commentsElement.innerHTML;
       const index = oldComments.lastIndexOf('<li class="comment">');
 
       if (index !== -1) {
-        commentsElement.innerHTML = comments.substr(0, index);
+        commentsElement.innerHTML = oldComments.substr(0, index);
       }
     });
 
