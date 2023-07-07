@@ -21,7 +21,9 @@ const getDate = () => {
   const hour = date.getHours();
   const minutes = date.getMinutes();
 
-  result += `${day}.${months[month]}.${year} ${hour}:${minutes}`;
+  result += `${day}.${months[month]}.${year} ${hour}:${
+    minutes / 10 < 1 ? `0${minutes}` : minutes
+  }`;
   return result;
 };
 
