@@ -9,7 +9,7 @@
   <body>
     <div class="container">
       <ul class="comments">
-        <li class="comment">
+        <!-- <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
             <div>12.02.22 12:18</div>
@@ -42,7 +42,7 @@
               <button class="like-button -active-like"></button>
             </div>
           </div>
-        </li>
+        </li> -->
       </ul>
       <div class="add-form">
         <input
@@ -75,20 +75,19 @@
     const formTextElement = formElement.querySelector('.add-form-text');
     const formNameElement = formElement.querySelector('.add-form-name');
 
+    renderComments(commentsElement);
+
     button.classList.add('disabled');
     button.setAttribute('disabled', true);
 
     formElement.addEventListener('keyup', (event) => {
       createComment(formNameElement, formTextElement, event);
+      renderComments(commentsElement);
     });
 
     removeButton.addEventListener('click', () => {
-      const oldComments = commentsElement.innerHTML;
-      const index = oldComments.lastIndexOf('<li class="comment">');
-
-      if (index !== -1) {
-        commentsElement.innerHTML = oldComments.substr(0, index);
-      }
+      comments.pop();
+      renderComments(commentsElement);
     });
 
     formElement.addEventListener('input', () => {
@@ -104,6 +103,7 @@
 
     button.addEventListener('click', () => {
       createComment(formNameElement, formTextElement);
+      renderComments(commentsElement);
     });
   </script>
 </html>
