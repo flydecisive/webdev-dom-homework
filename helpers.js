@@ -1,6 +1,7 @@
 // данные комментариев
 const comments = [
   {
+    id: 0,
     name: 'Глеб Фокин',
     date: '12.02.22 12:18',
     text: 'Это будет первый комментарий на этой странице',
@@ -8,6 +9,7 @@ const comments = [
     isLiked: false,
   },
   {
+    id: 1,
     name: 'Варвара Н.',
     date: '13.02.22 19:22',
     text: 'Мне нравится как оформлена эта страница! ❤',
@@ -63,9 +65,9 @@ const renderComments = (parent) => {
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">${comment.likesCount}</span>
-              <button class="like-button ${
-                comment.isLiked ? '-active-like' : ''
-              }"></button>
+              <button data-id="${comment.id}" class="like-button ${
+        comment.isLiked ? '-active-like' : ''
+      }"></button>
             </div>
           </div>
         </li>`;
@@ -79,12 +81,10 @@ const renderComments = (parent) => {
 
 // добавление обработчика события для лайка
 const initLikesEventListeners = () => {
-  const commentElements = document.querySelectorAll('.comment');
+  const likeButtons = document.querySelectorAll('.like-button');
 
-  commentElements.forEach((commentElement) => {
-    commentElement.addEventListener('click', (e) => {
-      console.log(e);
-    });
+  likeButtons.forEach((likeButton) => {
+    likeButton.addEventListener('click', (e) => toggleLike(e));
   });
 };
 
@@ -115,6 +115,7 @@ const createComment = (formNameElement, formTextElement, event = null) => {
       comment = formTextValue;
 
       comments.push({
+        id: comments.length,
         name: name,
         date: getDate(),
         text: comment,
@@ -125,25 +126,19 @@ const createComment = (formNameElement, formTextElement, event = null) => {
   }
 };
 
-// Смена лайка при нажатии
-// const toggleLike = (elements) => {
-//   const likes = [];
-//   elements.forEach((element) => {
-//     likes.push(element.querySelector('.likes'));
-//   });
-//   likes.forEach((like) => {
-//     like.addEventListener('click', () => {
-//       const likesCounter = like.querySelector('.likes-counter');
-//       const likeButton = like.querySelector('.like-button');
-//       const activeLike = likeButton.classList.contains('-active-like');
+// смена лайка при нажатии
+const toggleLike = (e) => {
+  const targetId = e.target.dataset.id;
+  const comment = comments[+targetId];
 
-//       if (activeLike) {
-//         likeButton.classList.remove('-active-like');
-//         likesCounter.textContent = Number(likesCounter.textContent) - 1;
-//       } else {
-//         likeButton.classList.add('-active-like');
-//         likesCounter.textContent = Number(likesCounter.textContent) + 1;
-//       }
-//     });
-//   });
-// };
+  if (comment.isLiked) {
+    comment.isLiked = false;
+    comment.likesCount -= 1;
+  } else {
+    comment.isLiked = true;
+    comment.likesCount += 1;
+  }
+
+  const parent = document.querySelector('.comments');
+  renderComments(parent);
+};
