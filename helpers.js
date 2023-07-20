@@ -7,6 +7,7 @@ const comments = [
     text: 'Это будет первый комментарий на этой странице',
     likesCount: 3,
     isLiked: false,
+    isEdit: false,
   },
   {
     id: 1,
@@ -15,6 +16,7 @@ const comments = [
     text: 'Мне нравится как оформлена эта страница! ❤',
     likesCount: 75,
     isLiked: true,
+    isEdit: false,
   },
 ];
 
@@ -52,24 +54,31 @@ const getDate = () => {
 const renderComments = (parent) => {
   const commentsHtml = comments
     .map((comment) => {
-      return `<li class="comment">
+      return `<li class="comment" data-id="${comment.id}">
           <div class="comment-header">
             <div>${comment.name}</div>
             <div>${comment.date}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
-              ${comment.text}
+              ${
+                comment.isEdit
+                  ? '<textarea class="edit-comment"></textarea>'
+                  : comment.text
+              }
             </div>
           </div>
           <div class="comment-footer">
+          <button class=${
+            comment.isEdit ? 'save-form-button' : 'edit-form-button'
+          }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
             <div class="likes">
               <span class="likes-counter">${comment.likesCount}</span>
-              <button data-id="${comment.id}" class="like-button ${
-        comment.isLiked ? '-active-like' : ''
-      }"></button>
+              <button class="like-button ${
+                comment.isLiked ? '-active-like' : ''
+              }"></button>
             </div>
-          </div>
+          </div> 
         </li>`;
     })
     .join('');
@@ -77,6 +86,7 @@ const renderComments = (parent) => {
   parent.innerHTML = commentsHtml;
 
   initLikesEventListeners();
+  initEditButtonEventListeners();
 };
 
 // добавление обработчика события для лайка
@@ -86,6 +96,49 @@ const initLikesEventListeners = () => {
   likeButtons.forEach((likeButton) => {
     likeButton.addEventListener('click', (e) => toggleLike(e));
   });
+};
+
+// добавление обработчика события для кнопки удаления
+const initEditButtonEventListeners = () => {
+  const editButtons = document.querySelectorAll('.edit-form-button');
+
+  editButtons.forEach((editButton) => {
+    editButton.addEventListener('click', (e) => {
+      const id = e.target.closest('.comment').dataset.id;
+      comments[id].isEdit = true;
+
+      renderComments(commentsElement);
+
+      const editComment = document.querySelector('.edit-comment');
+      editComment.textContent = comments[id].text;
+
+      editComment.addEventListener('input', (e) => {
+        comments[id].text = e.target.value;
+      });
+      const saveButton = document.querySelector('.save-form-button');
+
+      saveButton.addEventListener('click', () => {
+        comments[id].isEdit = false;
+        renderComments(commentsElement);
+      });
+    });
+  });
+};
+
+// функция редактирования комментария
+const editComment = (e) => {
+  const targetComment = e.target.closest('.comment');
+  const id = e.target.closest('.comment').dataset.id;
+  const commentText = targetComment.querySelector('.comment-text');
+  const saveButton = targetComment.querySelector('.save-form-button');
+  console.log(saveButton);
+  const commentsElement = document.querySelector('.comments');
+
+  // saveButton.addEventListener('click', () => {
+  //   comments[id].isEdit = false;
+  //   console.log('click');
+  //   renderComments(commentsElement);
+  // });
 };
 
 // Создание нового комментария
@@ -121,6 +174,7 @@ const createComment = (formNameElement, formTextElement, event = null) => {
         text: comment,
         likesCount: 0,
         isLiked: false,
+        isEdit: false,
       });
     }
   }
@@ -128,8 +182,9 @@ const createComment = (formNameElement, formTextElement, event = null) => {
 
 // смена лайка при нажатии
 const toggleLike = (e) => {
-  const targetId = e.target.dataset.id;
-  const comment = comments[+targetId];
+  const target = e.target;
+  const id = target.closest('.comment').dataset.id;
+  const comment = comments[+id];
 
   if (comment.isLiked) {
     comment.isLiked = false;
