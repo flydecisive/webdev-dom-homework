@@ -97,7 +97,11 @@ const initCommentEventListeners = () => {
   comments.forEach((comment) => {
     comment.addEventListener('click', (e) => {
       const { target } = e;
-      if (!target.closest('.comment-footer')) {
+      if (
+        !target.closest('.like-button') &&
+        !target.closest('.save-form-button') &&
+        !target.closest('.edit-form-button')
+      ) {
         getQuotingComment(target.closest('.comment'));
       }
     });
