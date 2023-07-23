@@ -109,7 +109,8 @@ const getQuotingComment = (elem) => {
   const name = elem.querySelector('.comment-name').textContent.trim();
   const text = elem.querySelector('.comment-text').textContent.trim();
   const addFormText = document.querySelector('.add-form-text');
-  addFormText.textContent = `${name}:\n${text}`;
+  addFormText.textContent = `> ${text}\n\n${name}, `;
+  window.scrollTo(0, document.body.scrollHeight);
 };
 
 // добавление обработчика события для лайка
