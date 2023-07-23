@@ -56,7 +56,7 @@ const renderComments = (parent) => {
     .map((comment) => {
       return `<li class="comment" data-id="${comment.id}">
           <div class="comment-header">
-            <div>${comment.name}</div>
+            <div class='comment-name'>${comment.name}</div>
             <div>${comment.date}</div>
           </div>
           <div class="comment-body">
@@ -69,14 +69,14 @@ const renderComments = (parent) => {
             </div>
           </div>
           <div class="comment-footer">
-          <button class=${
-            comment.isEdit ? 'save-form-button' : 'edit-form-button'
-          }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
-            <div class="likes">
-              <span class="likes-counter">${comment.likesCount}</span>
-              <button class="like-button ${
-                comment.isLiked ? '-active-like' : ''
-              }"></button>
+            <button class=${
+              comment.isEdit ? 'save-form-button' : 'edit-form-button'
+            }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
+              <div class="likes">
+                <span class="likes-counter">${comment.likesCount}</span>
+                <button class="like-button ${
+                  comment.isLiked ? '-active-like' : ''
+                }"></button>
             </div>
           </div> 
         </li>`;
@@ -87,6 +87,29 @@ const renderComments = (parent) => {
 
   initLikesEventListeners();
   initEditButtonEventListeners();
+  initCommentEventListeners();
+};
+
+// Добавление обработчика события для комментария
+const initCommentEventListeners = () => {
+  const comments = document.querySelectorAll('.comment');
+
+  comments.forEach((comment) => {
+    comment.addEventListener('click', (e) => {
+      const { target } = e;
+      if (!target.closest('.comment-footer')) {
+        getQuotingComment(target.closest('.comment'));
+      }
+    });
+  });
+};
+
+// получение цитируемого комментария
+const getQuotingComment = (elem) => {
+  const name = elem.querySelector('.comment-name').textContent.trim();
+  const text = elem.querySelector('.comment-text').textContent.trim();
+  const addFormText = document.querySelector('.add-form-text');
+  addFormText.textContent = `${name}:\n${text}`;
 };
 
 // добавление обработчика события для лайка
