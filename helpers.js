@@ -125,22 +125,6 @@ const initEditButtonEventListeners = () => {
   });
 };
 
-// функция редактирования комментария
-const editComment = (e) => {
-  const targetComment = e.target.closest('.comment');
-  const id = e.target.closest('.comment').dataset.id;
-  const commentText = targetComment.querySelector('.comment-text');
-  const saveButton = targetComment.querySelector('.save-form-button');
-  console.log(saveButton);
-  const commentsElement = document.querySelector('.comments');
-
-  // saveButton.addEventListener('click', () => {
-  //   comments[id].isEdit = false;
-  //   console.log('click');
-  //   renderComments(commentsElement);
-  // });
-};
-
 // Создание нового комментария
 const createComment = (formNameElement, formTextElement, event = null) => {
   const eventCode = event ? event.code : event;
