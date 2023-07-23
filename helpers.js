@@ -90,7 +90,7 @@ const renderComments = (parent) => {
   initCommentEventListeners();
 };
 
-// Добавление обработчика события для комментария
+// Добавление обработчика события для цитирования комментария
 const initCommentEventListeners = () => {
   const comments = document.querySelectorAll('.comment');
 
@@ -172,7 +172,7 @@ const createComment = (formNameElement, formTextElement, event = null) => {
       !formTextValue.match(/^\s*$/)
     ) {
       name = formNameValue;
-      comment = formTextValue;
+      comment = formTextValue.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
       comments.push({
         id: comments.length,
