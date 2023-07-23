@@ -52,7 +52,8 @@ body {
 
 .comment-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .comment-body {
@@ -153,4 +154,19 @@ body {
 
 .disabled {
   background-color: lightgrey;
+}
+
+.edit-form-button,
+.save-form-button {
+  font-size: 24px;
+  padding: 10px 20px;
+  background-color: #bcec30;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+textarea {
+  width: 500px;
+  height: 44px;
 }

@@ -1,3 +1,26 @@
+// данные комментариев
+const comments = [
+  {
+    id: 0,
+    name: 'Глеб Фокин',
+    date: '12.02.22 12:18',
+    text: 'Это будет первый комментарий на этой странице',
+    likesCount: 3,
+    isLiked: false,
+    isEdit: false,
+  },
+  {
+    id: 1,
+    name: 'Варвара Н.',
+    date: '13.02.22 19:22',
+    text: 'Мне нравится как оформлена эта страница! ❤',
+    likesCount: 75,
+    isLiked: true,
+    isEdit: false,
+  },
+];
+
+// Получение даты комментария
 const getDate = () => {
   const months = [
     '01',
@@ -27,10 +50,101 @@ const getDate = () => {
   return result;
 };
 
+// рендер комментария
+const renderComments = (parent) => {
+  const commentsHtml = comments
+    .map((comment) => {
+      return `<li class="comment" data-id="${comment.id}">
+          <div class="comment-header">
+            <div>${comment.name}</div>
+            <div>${comment.date}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${
+                comment.isEdit
+                  ? '<textarea class="edit-comment"></textarea>'
+                  : comment.text
+              }
+            </div>
+          </div>
+          <div class="comment-footer">
+          <button class=${
+            comment.isEdit ? 'save-form-button' : 'edit-form-button'
+          }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
+            <div class="likes">
+              <span class="likes-counter">${comment.likesCount}</span>
+              <button class="like-button ${
+                comment.isLiked ? '-active-like' : ''
+              }"></button>
+            </div>
+          </div> 
+        </li>`;
+    })
+    .join('');
+
+  parent.innerHTML = commentsHtml;
+
+  initLikesEventListeners();
+  initEditButtonEventListeners();
+};
+
+// добавление обработчика события для лайка
+const initLikesEventListeners = () => {
+  const likeButtons = document.querySelectorAll('.like-button');
+
+  likeButtons.forEach((likeButton) => {
+    likeButton.addEventListener('click', (e) => toggleLike(e));
+  });
+};
+
+// добавление обработчика события для кнопки удаления
+const initEditButtonEventListeners = () => {
+  const editButtons = document.querySelectorAll('.edit-form-button');
+
+  editButtons.forEach((editButton) => {
+    editButton.addEventListener('click', (e) => {
+      const id = e.target.closest('.comment').dataset.id;
+      comments[id].isEdit = true;
+
+      renderComments(commentsElement);
+
+      const editComment = document.querySelector('.edit-comment');
+      editComment.textContent = comments[id].text;
+
+      editComment.addEventListener('input', (e) => {
+        comments[id].text = e.target.value;
+      });
+      const saveButton = document.querySelector('.save-form-button');
+
+      saveButton.addEventListener('click', () => {
+        comments[id].isEdit = false;
+        renderComments(commentsElement);
+      });
+    });
+  });
+};
+
+// функция редактирования комментария
+const editComment = (e) => {
+  const targetComment = e.target.closest('.comment');
+  const id = e.target.closest('.comment').dataset.id;
+  const commentText = targetComment.querySelector('.comment-text');
+  const saveButton = targetComment.querySelector('.save-form-button');
+  console.log(saveButton);
+  const commentsElement = document.querySelector('.comments');
+
+  // saveButton.addEventListener('click', () => {
+  //   comments[id].isEdit = false;
+  //   console.log('click');
+  //   renderComments(commentsElement);
+  // });
+};
+
+// Создание нового комментария
 const createComment = (formNameElement, formTextElement, event = null) => {
   const eventCode = event ? event.code : event;
   if (eventCode === 'Enter' || eventCode === null) {
-    const oldComments = commentsElement.innerHTML;
     let name = '';
     let comment = '';
 
@@ -53,25 +167,33 @@ const createComment = (formNameElement, formTextElement, event = null) => {
       name = formNameValue;
       comment = formTextValue;
 
-      commentsElement.innerHTML =
-        oldComments +
-        `<li class="comment">
-          <div class="comment-header">
-            <div>${name}</div>
-            <div>${getDate()}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${comment}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>`;
+      comments.push({
+        id: comments.length,
+        name: name,
+        date: getDate(),
+        text: comment,
+        likesCount: 0,
+        isLiked: false,
+        isEdit: false,
+      });
     }
   }
+};
+
+// смена лайка при нажатии
+const toggleLike = (e) => {
+  const target = e.target;
+  const id = target.closest('.comment').dataset.id;
+  const comment = comments[+id];
+
+  if (comment.isLiked) {
+    comment.isLiked = false;
+    comment.likesCount -= 1;
+  } else {
+    comment.isLiked = true;
+    comment.likesCount += 1;
+  }
+
+  const parent = document.querySelector('.comments');
+  renderComments(parent);
 };
