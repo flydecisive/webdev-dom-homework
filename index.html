@@ -9,40 +9,6 @@
   <body>
     <div class="container">
       <ul class="comments">
-        <!-- <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li> -->
       </ul>
       <div class="add-form">
         <input
@@ -57,9 +23,9 @@
           rows="4"
         ></textarea>
         <div class="add-form-row">
-          <button class="remove-form-button">
+          <!-- <button class="remove-form-button">
             Удалить последний комментарий
-          </button>
+          </button> -->
           <button class="add-form-button">Написать</button>
         </div>
       </div>
@@ -68,27 +34,24 @@
   <script src="./helpers.js"></script>
   <script>
     'use strict';
-    const commentsElement = document.querySelector('.comments');
     const button = document.querySelector('.add-form-button');
     const removeButton = document.querySelector('.remove-form-button');
     const formElement = document.querySelector('.add-form');
     const formTextElement = formElement.querySelector('.add-form-text');
     const formNameElement = formElement.querySelector('.add-form-name');
 
-    renderComments(commentsElement);
-
-    button.classList.add('disabled');
-    button.setAttribute('disabled', true);
+    getComments();
+    // renderComments();
 
     formElement.addEventListener('keyup', (event) => {
       createComment(formNameElement, formTextElement, event);
-      renderComments(commentsElement);
+      getComments();
     });
 
-    removeButton.addEventListener('click', () => {
-      comments.pop();
-      renderComments(commentsElement);
-    });
+    // removeButton.addEventListener('click', () => {
+    //   comments.pop();
+    //   getComments();
+    // });
 
     formElement.addEventListener('input', () => {
       if (
@@ -103,7 +66,7 @@
 
     button.addEventListener('click', () => {
       createComment(formNameElement, formTextElement);
-      renderComments(commentsElement);
+      getComments();
     });
   </script>
 </html>
