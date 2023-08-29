@@ -1,27 +1,7 @@
-// данные комментариев
-const comments = [
-  {
-    id: 0,
-    name: 'Глеб Фокин',
-    date: '12.02.22 12:18',
-    text: 'Это будет первый комментарий на этой странице',
-    likesCount: 3,
-    isLiked: false,
-    isEdit: false,
-  },
-  {
-    id: 1,
-    name: 'Варвара Н.',
-    date: '13.02.22 19:22',
-    text: 'Мне нравится как оформлена эта страница! ❤',
-    likesCount: 75,
-    isLiked: true,
-    isEdit: false,
-  },
-];
+let comments = [];
 
 // Получение даты комментария
-const getDate = () => {
+const getDate = (data=null) => {
   const months = [
     '01',
     '02',
@@ -37,27 +17,45 @@ const getDate = () => {
     '12',
   ];
   let result = '';
-  const date = new Date();
+  const date = data ? new Date(data) : new Date();
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
   const hour = date.getHours();
   const minutes = date.getMinutes();
 
-  result += `${day}.${months[month]}.${year} ${hour}:${
+  result += `${day / 10 < 1 ? `0${day}` : day}.${months[month]}.${year} ${hour}:${
     minutes / 10 < 1 ? `0${minutes}` : minutes
   }`;
   return result;
 };
 
+const getComments = async () => {
+  fetch('https://wedev-api.sky.pro/api/v1/maksim-muhin/comments', {
+    method: 'GET'
+  }).then((response) => {
+    response.json().then((responseData) => {
+      comments = responseData.comments.map((el) => el);
+      renderComments();
+    })
+  })
+}
+
+// Кнопка редактировать
+// <button class=${
+          //   comment.isEdit ? 'save-form-button' : 'edit-form-button'
+          // }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
+
 // рендер комментария
-const renderComments = (parent) => {
+const renderComments = () => {
+  const parent = document.querySelector('.comments');
+
   const commentsHtml = comments
     .map((comment) => {
       return `<li class="comment" data-id="${comment.id}">
           <div class="comment-header">
-            <div>${comment.name}</div>
-            <div>${comment.date}</div>
+            <div>${comment.author.name}</div>
+            <div>${getDate(comment.date)}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
@@ -69,11 +67,8 @@ const renderComments = (parent) => {
             </div>
           </div>
           <div class="comment-footer">
-          <button class=${
-            comment.isEdit ? 'save-form-button' : 'edit-form-button'
-          }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
             <div class="likes">
-              <span class="likes-counter">${comment.likesCount}</span>
+              <span class="likes-counter">${comment.likes}</span>
               <button class="like-button ${
                 comment.isLiked ? '-active-like' : ''
               }"></button>
@@ -86,7 +81,7 @@ const renderComments = (parent) => {
   parent.innerHTML = commentsHtml;
 
   initLikesEventListeners();
-  initEditButtonEventListeners();
+  // initEditButtonEventListeners();
 };
 
 // добавление обработчика события для лайка
@@ -99,31 +94,31 @@ const initLikesEventListeners = () => {
 };
 
 // добавление обработчика события для кнопки удаления
-const initEditButtonEventListeners = () => {
-  const editButtons = document.querySelectorAll('.edit-form-button');
+// const initEditButtonEventListeners = () => {
+//   const editButtons = document.querySelectorAll('.edit-form-button');
 
-  editButtons.forEach((editButton) => {
-    editButton.addEventListener('click', (e) => {
-      const id = e.target.closest('.comment').dataset.id;
-      comments[id].isEdit = true;
+//   editButtons.forEach((editButton) => {
+//     editButton.addEventListener('click', (e) => {
+//       const id = e.target.closest('.comment').dataset.id;
+//       comments[id].isEdit = true;
 
-      renderComments(commentsElement);
+//       renderComments(commentsElement);
 
-      const editComment = document.querySelector('.edit-comment');
-      editComment.textContent = comments[id].text;
+//       const editComment = document.querySelector('.edit-comment');
+//       editComment.textContent = comments[id].text;
 
-      editComment.addEventListener('input', (e) => {
-        comments[id].text = e.target.value;
-      });
-      const saveButton = document.querySelector('.save-form-button');
+//       editComment.addEventListener('input', (e) => {
+//         comments[id].text = e.target.value;
+//       });
+//       const saveButton = document.querySelector('.save-form-button');
 
-      saveButton.addEventListener('click', () => {
-        comments[id].isEdit = false;
-        renderComments(commentsElement);
-      });
-    });
-  });
-};
+//       saveButton.addEventListener('click', () => {
+//         comments[id].isEdit = false;
+//         renderComments(commentsElement);
+//       });
+//     });
+//   });
+// };
 
 // Создание нового комментария
 const createComment = (formNameElement, formTextElement, event = null) => {
@@ -150,16 +145,42 @@ const createComment = (formNameElement, formTextElement, event = null) => {
     ) {
       name = formNameValue;
       comment = formTextValue;
+      button.classList.add('disabled');
+      button.setAttribute('disabled', true);
+      const addForm = document.querySelector('.add-form');
+      addForm.innerHTML = '<p>Комментарий добавляется...</p>'
 
-      comments.push({
-        id: comments.length,
-        name: name,
-        date: getDate(),
-        text: comment,
-        likesCount: 0,
-        isLiked: false,
-        isEdit: false,
-      });
+      fetch('https://wedev-api.sky.pro/api/v1/maksim-muhin/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+          text: comment,
+          name: name
+        })
+      }).then((response) => {
+        if (response.status === 201) {
+          getComments();
+        }
+      })
+      .finally(() => {
+        button.classList.remove('disabled');
+        button.removeAttribute('disabled');
+        addForm.innerHTML = `
+        <input
+          type="text"
+          class="add-form-name"
+          placeholder="Введите ваше имя"
+        />
+        <textarea
+          type="textarea"
+          class="add-form-text"
+          placeholder="Введите ваш коментарий"
+          rows="4"
+        ></textarea>
+        <div class="add-form-row">
+          <button class="add-form-button">Написать</button>
+        </div>
+        `
+      })
     }
   }
 };
@@ -168,14 +189,20 @@ const createComment = (formNameElement, formTextElement, event = null) => {
 const toggleLike = (e) => {
   const target = e.target;
   const id = target.closest('.comment').dataset.id;
-  const comment = comments[+id];
+  let comment;
+
+  for (let i = 0; i < comments.length; i += 1) {
+    if (comments[i].id === +id) {
+      comment = comments[i];
+    }
+  }
 
   if (comment.isLiked) {
     comment.isLiked = false;
-    comment.likesCount -= 1;
+    comment.likes -= 1;
   } else {
     comment.isLiked = true;
-    comment.likesCount += 1;
+    comment.likes += 1;
   }
 
   const parent = document.querySelector('.comments');
