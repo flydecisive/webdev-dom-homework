@@ -30,14 +30,19 @@ const getDate = (data=null) => {
   return result;
 };
 
+
+// Получение комментариев и рендер
 const getComments = async () => {
-  fetch('https://wedev-api.sky.pro/api/v1/maksim-muhin/comments', {
+  fetch('https://wedev-api.sky.pro/api/v1/adsasd-asddasd/comments', {
     method: 'GET'
   }).then((response) => {
-    response.json().then((responseData) => {
-      comments = responseData.comments.map((el) => el);
-      renderComments();
-    })
+    return response.json()
+  }).then((responseData) => {
+    comments = responseData.comments.map((el) => el);
+    renderComments();
+  }).finally(() => {
+    const loader = document.querySelector('.loader');
+    loader.classList.add('hide');
   })
 }
 
@@ -46,7 +51,7 @@ const getComments = async () => {
           //   comment.isEdit ? 'save-form-button' : 'edit-form-button'
           // }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
 
-// рендер комментария
+// рендер комментариев
 const renderComments = () => {
   const parent = document.querySelector('.comments');
 
@@ -81,7 +86,6 @@ const renderComments = () => {
   parent.innerHTML = commentsHtml;
 
   initLikesEventListeners();
-  // initEditButtonEventListeners();
 };
 
 // добавление обработчика события для лайка
@@ -112,7 +116,7 @@ const initLikesEventListeners = () => {
 //       });
 //       const saveButton = document.querySelector('.save-form-button');
 
-//       saveButton.addEventListener('click', () => {
+//       saveB;utton.addEventListener('click', () => {
 //         comments[id].isEdit = false;
 //         renderComments(commentsElement);
 //       });
@@ -127,8 +131,8 @@ const createComment = (formNameElement, formTextElement, event = null) => {
     let name = '';
     let comment = '';
 
-    const formNameValue = formNameElement.value;
-    const formTextValue = formTextElement.value;
+    let formNameValue = formNameElement.value;
+    let formTextValue = formTextElement.value;
 
     formNameValue === ''
       ? formNameElement.classList.add('error')
@@ -145,18 +149,21 @@ const createComment = (formNameElement, formTextElement, event = null) => {
     ) {
       name = formNameValue;
       comment = formTextValue;
+      console.log(comment);
+      console.log(name);
       button.classList.add('disabled');
       button.setAttribute('disabled', true);
       const addForm = document.querySelector('.add-form');
       addForm.innerHTML = '<p>Комментарий добавляется...</p>'
 
-      fetch('https://wedev-api.sky.pro/api/v1/maksim-muhin/comments', {
+      fetch('https://wedev-api.sky.pro/api/v1/adsasd-asddasd/comments', {
         method: 'POST',
         body: JSON.stringify({
           text: comment,
           name: name
         })
-      }).then((response) => {
+      })
+      .then((response) => {
         if (response.status === 201) {
           getComments();
         }
@@ -181,7 +188,7 @@ const createComment = (formNameElement, formTextElement, event = null) => {
         </div>
         `
       })
-    }
+    }  
   }
 };
 
