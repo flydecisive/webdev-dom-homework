@@ -1,4 +1,5 @@
 let comments = [];
+// const loader = '<img class="loader" />'
 
 // Получение даты комментария
 const getDate = (data=null) => {
@@ -30,19 +31,31 @@ const getDate = (data=null) => {
   return result;
 };
 
+// Задержка для лайков
+function delay(interval = 300) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, interval);
+  });
+}
 
-// Получение комментариев и рендер
 const getComments = async () => {
-  fetch('https://wedev-api.sky.pro/api/v1/adsasd-asddasd/comments', {
+  fetch('https://wedev-api.sky.pro/api/v1/maks-muhin/comments', {
     method: 'GET'
   }).then((response) => {
-    return response.json()
-  }).then((responseData) => {
-    comments = responseData.comments.map((el) => el);
-    renderComments();
-  }).finally(() => {
-    const loader = document.querySelector('.loader');
-    loader.classList.add('hide');
+    response.json().then((responseData) => {
+      comments = responseData.comments.map((el) => el);
+      renderComments();
+    })
+    .finally(() => {
+      const loader = document.querySelector('.loader');
+      loader?.remove();
+      // const formTextElement = formElement.querySelector('.add-form-text');
+      // const formNameElement = formElement.querySelector('.add-form-name');
+
+      // formTextElement.value = '';
+    })
   })
 }
 
@@ -51,9 +64,10 @@ const getComments = async () => {
           //   comment.isEdit ? 'save-form-button' : 'edit-form-button'
           // }>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
 
-// рендер комментариев
+// рендер комментария
 const renderComments = () => {
   const parent = document.querySelector('.comments');
+  
 
   const commentsHtml = comments
     .map((comment) => {
@@ -116,7 +130,7 @@ const initLikesEventListeners = () => {
 //       });
 //       const saveButton = document.querySelector('.save-form-button');
 
-//       saveB;utton.addEventListener('click', () => {
+//       saveButton.addEventListener('click', () => {
 //         comments[id].isEdit = false;
 //         renderComments(commentsElement);
 //       });
@@ -127,12 +141,12 @@ const initLikesEventListeners = () => {
 // Создание нового комментария
 const createComment = (formNameElement, formTextElement, event = null) => {
   const eventCode = event ? event.code : event;
+  let name = '';
+  let comment = '';
   if (eventCode === 'Enter' || eventCode === null) {
-    let name = '';
-    let comment = '';
 
-    let formNameValue = formNameElement.value;
-    let formTextValue = formTextElement.value;
+    const formNameValue = formNameElement.value;
+    const formTextValue = formTextElement.value;
 
     formNameValue === ''
       ? formNameElement.classList.add('error')
@@ -149,26 +163,21 @@ const createComment = (formNameElement, formTextElement, event = null) => {
     ) {
       name = formNameValue;
       comment = formTextValue;
-      console.log(comment);
-      console.log(name);
       button.classList.add('disabled');
       button.setAttribute('disabled', true);
       const addForm = document.querySelector('.add-form');
       addForm.innerHTML = '<p>Комментарий добавляется...</p>'
 
-      fetch('https://wedev-api.sky.pro/api/v1/adsasd-asddasd/comments', {
+      fetch('https://wedev-api.sky.pro/api/v1/maks-muhin/comments', {
         method: 'POST',
         body: JSON.stringify({
           text: comment,
           name: name
         })
+      }).then(() => {
+        getComments();
       })
-      .then((response) => {
-        if (response.status === 201) {
-          getComments();
-        }
-      })
-      .finally(() => {
+      .then(() => {
         button.classList.remove('disabled');
         button.removeAttribute('disabled');
         addForm.innerHTML = `
@@ -188,7 +197,33 @@ const createComment = (formNameElement, formTextElement, event = null) => {
         </div>
         `
       })
-    }  
+      .finally(() => {
+        const button = document.querySelector('.add-form-button');
+        const formElement = document.querySelector('.add-form');
+        const formTextElement = formElement.querySelector('.add-form-text');
+        const formNameElement = formElement.querySelector('.add-form-name');
+
+        formElement.addEventListener('keyup', (event) => {
+          createComment(formNameElement, formTextElement, event);
+          getComments();
+        });
+
+        formElement.addEventListener('input', () => {
+          if (
+            (formTextElement.value !== '' &&
+              !formTextElement.value.match(/^\s*$/)) ||
+            formNameElement.value !== ''
+          ) {
+            button.classList.remove('disabled');
+            button.removeAttribute('disabled');
+          }
+        });
+
+        button.addEventListener('click', () => {
+          createComment(formNameElement, formTextElement);
+        });
+      })
+    }
   }
 };
 
@@ -204,14 +239,15 @@ const toggleLike = (e) => {
     }
   }
 
-  if (comment.isLiked) {
-    comment.isLiked = false;
-    comment.likes -= 1;
-  } else {
-    comment.isLiked = true;
-    comment.likes += 1;
-  }
+  target.classList.add('-loading-like');
 
-  const parent = document.querySelector('.comments');
-  renderComments(parent);
+  delay(2000).then(() => {
+    comment.likes = comment.isLiked
+      ? comment.likes - 1
+      : comment.likes + 1;
+    comment.isLiked = !comment.isLiked;
+    renderComments();
+  }).finally(() => {
+    target.classList.remove('-loading-like');
+  })
 };
