@@ -40,22 +40,31 @@ function delay(interval = 300) {
   });
 }
 
+// Получение комментариев
 const getComments = async () => {
   fetch('https://wedev-api.sky.pro/api/v1/maks-muhin/comments', {
     method: 'GET'
-  }).then((response) => {
-    response.json().then((responseData) => {
-      comments = responseData.comments.map((el) => el);
-      renderComments();
-    })
-    .finally(() => {
-      const loader = document.querySelector('.loader');
-      loader?.remove();
-      // const formTextElement = formElement.querySelector('.add-form-text');
-      // const formNameElement = formElement.querySelector('.add-form-name');
-
-      // formTextElement.value = '';
-    })
+  })
+  .then((response) => {
+    if (response.status === 500) {
+      alert('Сервер сломался, попробуй позже');
+    } else {
+      return response.json();
+    }
+    
+  })
+  .then((responseData) => {
+    comments = responseData.comments.map((el) => el);
+    renderComments();
+  })
+  .catch((error) => {
+    if (error.message === 'Failed to fetch') {
+      alert('Кажется, у вас сломался интернет, попробуйте позже');
+    }
+  })
+  .finally(() => {
+    const loader = document.querySelector('.loader');
+    loader?.remove();
   })
 }
 
@@ -111,38 +120,15 @@ const initLikesEventListeners = () => {
   });
 };
 
-// добавление обработчика события для кнопки удаления
-// const initEditButtonEventListeners = () => {
-//   const editButtons = document.querySelectorAll('.edit-form-button');
-
-//   editButtons.forEach((editButton) => {
-//     editButton.addEventListener('click', (e) => {
-//       const id = e.target.closest('.comment').dataset.id;
-//       comments[id].isEdit = true;
-
-//       renderComments(commentsElement);
-
-//       const editComment = document.querySelector('.edit-comment');
-//       editComment.textContent = comments[id].text;
-
-//       editComment.addEventListener('input', (e) => {
-//         comments[id].text = e.target.value;
-//       });
-//       const saveButton = document.querySelector('.save-form-button');
-
-//       saveButton.addEventListener('click', () => {
-//         comments[id].isEdit = false;
-//         renderComments(commentsElement);
-//       });
-//     });
-//   });
-// };
+// const formElement = document.querySelector('.add-form');
+// const formTextElement = formElement.querySelector('.add-form-text');
+// const formNameElement = formElement.querySelector('.add-form-name');
 
 // Создание нового комментария
 const createComment = (formNameElement, formTextElement, event = null) => {
   const eventCode = event ? event.code : event;
-  let name = '';
-  let comment = '';
+  let name;
+  let comment;
   if (eventCode === 'Enter' || eventCode === null) {
 
     const formNameValue = formNameElement.value;
@@ -174,8 +160,30 @@ const createComment = (formNameElement, formTextElement, event = null) => {
           text: comment,
           name: name
         })
-      }).then(() => {
-        getComments();
+      })
+      .then((response) => {
+        if (response.status === 500) {
+          // alert('Сервер сломался, попробуйте позже');
+          // createComment(formNameElement, formTextElement);
+          throw new Error('Сервер сломался');
+        } else if(response.status === 400) {
+          throw new Error('Ошибка сервера');
+        } else {
+          getComments();
+          comment = '';
+          name = '';
+        }
+      })
+      .catch((error) => {
+        if (error.message === 'Ошибка сервера') {
+          alert('Имя и комментарий должны быть не короче 3 символов');
+        } else if (error.message === 'Сервер сломался') {
+          console.log('Сервер сломался, попробуйте позже');
+          alert('Сервер сломался, попробуйте позже');
+          createComment(formNameElement, formTextElement);
+        } else if (error.message === 'Failed to fetch') {
+          alert('Кажется, у вас сломался интернет, попробуйте позже');
+        }
       })
       .then(() => {
         button.classList.remove('disabled');
@@ -202,13 +210,25 @@ const createComment = (formNameElement, formTextElement, event = null) => {
         const formElement = document.querySelector('.add-form');
         const formTextElement = formElement.querySelector('.add-form-text');
         const formNameElement = formElement.querySelector('.add-form-name');
+        formTextElement.value = comment;
+        formNameElement.value = name;
 
-        formElement.addEventListener('keyup', (event) => {
-          createComment(formNameElement, formTextElement, event);
-          getComments();
+        formNameValue === '' || formNameValue.length < 3
+          ? formNameElement.classList.add('error')
+          : formNameElement.classList.remove('error');
+
+        formTextValue === '' || formTextValue.match(/^\s*$/) || formTextValue.length < 3
+          ? formTextElement.classList.add('error')
+          : formTextElement.classList.remove('error');
+
+        formElement?.addEventListener('keyup', (event) => {
+          if (event.code === 'Enter') {
+            createComment(formNameElement, formTextElement, event);
+            getComments(); 
+          }
         });
 
-        formElement.addEventListener('input', () => {
+        formElement?.addEventListener('input', () => {
           if (
             (formTextElement.value !== '' &&
               !formTextElement.value.match(/^\s*$/)) ||
@@ -219,7 +239,7 @@ const createComment = (formNameElement, formTextElement, event = null) => {
           }
         });
 
-        button.addEventListener('click', () => {
+        button?.addEventListener('click', () => {
           createComment(formNameElement, formTextElement);
         });
       })
@@ -251,3 +271,31 @@ const toggleLike = (e) => {
     target.classList.remove('-loading-like');
   })
 };
+
+
+// добавление обработчика события для кнопки удаления
+// const initEditButtonEventListeners = () => {
+//   const editButtons = document.querySelectorAll('.edit-form-button');
+
+//   editButtons.forEach((editButton) => {
+//     editButton.addEventListener('click', (e) => {
+//       const id = e.target.closest('.comment').dataset.id;
+//       comments[id].isEdit = true;
+
+//       renderComments(commentsElement);
+
+//       const editComment = document.querySelector('.edit-comment');
+//       editComment.textContent = comments[id].text;
+
+//       editComment.addEventListener('input', (e) => {
+//         comments[id].text = e.target.value;
+//       });
+//       const saveButton = document.querySelector('.save-form-button');
+
+//       saveButton.addEventListener('click', () => {
+//         comments[id].isEdit = false;
+//         renderComments(commentsElement);
+//       });
+//     });
+//   });
+// };
