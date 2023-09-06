@@ -44,8 +44,10 @@
     getComments();
 
     formElement.addEventListener('keyup', (event) => {
-      createComment(formNameElement, formTextElement, event);
-      getComments(); 
+      if (event.code === 'Enter') {
+        createComment(formNameElement, formTextElement, event);
+        getComments(); 
+      }
     });
 
     // removeButton.addEventListener('click', () => {
