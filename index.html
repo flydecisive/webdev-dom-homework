@@ -24,16 +24,18 @@
           rows="4"
         ></textarea>
         <div class="add-form-row">
-          <!-- <button class="remove-form-button">
-            Удалить последний комментарий
-          </button> -->
           <button class="add-form-button">Написать</button>
         </div>
       </div>
     </div>
+    <script type="module" src="./modules/renderComments.js"></script>
+    <script type="module" src="./helpers.js"></script>
+    <script type="module" src="./modules/comments.js"></script>
+    <script type="module" src="./modules/api.js"></script>
+    <script type="module" src="./script.js"></script>
   </body>
-  <script src="./helpers.js"></script>
-  <script>
+  
+  <!-- <script>
     'use strict';
     const button = document.querySelector('.add-form-button');
     const removeButton = document.querySelector('.remove-form-button');
@@ -50,11 +52,6 @@
       }
     });
 
-    // removeButton.addEventListener('click', () => {
-    //   comments.pop();
-    //   getComments();
-    // });
-
     formElement.addEventListener('input', () => {
       if (
         (formTextElement.value !== '' &&
@@ -69,5 +66,5 @@
     button.addEventListener('click', () => {
       createComment(formNameElement, formTextElement);
     });
-  </script>
+  </script> -->
 </html>
