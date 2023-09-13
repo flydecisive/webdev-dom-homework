@@ -1,8 +1,8 @@
-import { getDate, initLikesEventListeners } from '../helpers.js';
+import { getDate, initLikesEventListeners } from "../helpers.js";
 
 // рендер комментария
 export const renderComments = (comments) => {
-  const parent = document.querySelector('.comments');
+  const commentsEl = document.querySelector(".comments");
 
   const commentsHtml = comments
     .map((comment) => {
@@ -24,15 +24,13 @@ export const renderComments = (comments) => {
               <div class="likes">
                 <span class="likes-counter">${comment.likes}</span>
                 <button class="like-button ${
-                  comment.isLiked ? '-active-like' : ''
+                  comment.isLiked ? "-active-like" : ""
                 }"></button>
               </div>
             </div> 
           </li>`;
     })
-    .join('');
+    .join("");
 
-  parent.innerHTML = commentsHtml;
-
-  initLikesEventListeners(comments);
+  commentsEl.innerHTML = commentsHtml;
 };
