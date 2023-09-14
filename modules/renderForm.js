@@ -1,6 +1,5 @@
-export function renderForm(addForm) {
+export function renderForm() {
   return `
-    <div class="add-form">
         <input
             type="text"
             class="add-form-name"
@@ -15,6 +14,9 @@ export function renderForm(addForm) {
         <div class="add-form-row">
             <button class="add-form-button">Написать</button>
         </div>
-    </div>
     `;
 }
+
+// <div class="add-form">
+
+// </div>
