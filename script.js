@@ -1,13 +1,11 @@
 import { renderMainPage } from "./modules/renderMainPage.js";
-import { getComments, addComment } from "./modules/api.js";
+import { getComments } from "./modules/api.js";
 import { renderComments } from "./modules/renderComments.js";
-import { renderForm } from "./modules/renderForm.js";
 import {
   initButtonEventListener,
   initInputEventListener,
   initEnterEventListener,
 } from "./modules/events.js";
-import { createComment } from "./modules/createComment.js";
 
 // Если есть токен то показывать главную страницу, если нет, то показывать страницу аториззации
 
