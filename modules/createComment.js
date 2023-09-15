@@ -8,37 +8,29 @@ import {
 import { renderForm } from "./renderForm.js";
 import { renderComments } from "./renderComments.js";
 
+const user = "Admin";
+
 // Создание нового комментария
 export function createComment(formNameElement, formTextElement, event = null) {
   const eventCode = event ? event.code : event;
   const button = document.querySelector(".add-form-button");
-  let name;
   let comment;
-  if (eventCode === "Enter" || eventCode === null) {
-    const formNameValue = formNameElement.value;
-    const formTextValue = formTextElement.value;
 
-    formNameValue === ""
-      ? formNameElement.classList.add("error")
-      : formNameElement.classList.remove("error");
+  if (eventCode === "Enter" || eventCode === null) {
+    const formTextValue = formTextElement.value;
 
     formTextValue === "" || formTextValue.match(/^\s*$/)
       ? formTextElement.classList.add("error")
       : formTextElement.classList.remove("error");
 
-    if (
-      formNameValue !== "" &&
-      formTextValue !== "" &&
-      !formTextValue.match(/^\s*$/)
-    ) {
-      name = formNameValue;
+    if (formTextValue !== "" && !formTextValue.match(/^\s*$/)) {
       comment = formTextValue;
       button.classList.add("disabled");
       button.setAttribute("disabled", true);
       const addForm = document.querySelector(".add-form");
       addForm.innerHTML = "<p>Комментарий добавляется...</p>";
 
-      addComment(comment, name)
+      addComment(comment)
         .catch((error) => {
           if (error.message === "Ошибка сервера") {
             alert("Имя и комментарий должны быть не короче 3 символов");
@@ -66,6 +58,9 @@ export function createComment(formNameElement, formTextElement, event = null) {
               }
             })
             .finally(() => {
+              const addFormName = document.querySelector(".add-form-name");
+              addFormName.value = user;
+              addFormName.setAttribute("disabled", true);
               initButtonEventListener();
               initInputEventListener();
               initEnterEventListener();

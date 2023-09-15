@@ -10,6 +10,7 @@ import {
 // Если есть токен то показывать главную страницу, если нет, то показывать страницу аториззации
 
 let comments;
+let user = "Admin";
 
 renderApp();
 
@@ -27,6 +28,9 @@ function renderApp() {
       }
     })
     .finally(() => {
+      const addFormName = document.querySelector(".add-form-name");
+      addFormName.value = user;
+      addFormName.setAttribute("disabled", true);
       initButtonEventListener();
       initInputEventListener();
       initEnterEventListener();
