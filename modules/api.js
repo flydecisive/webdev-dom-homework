@@ -1,12 +1,20 @@
-import { renderComments } from "./renderComments.js";
-import { renderForm } from "./renderForm.js";
+// import { renderComments } from "./renderComments.js";
+// import { renderForm } from "./renderForm.js";
 
-const button = document.querySelector(".add-form-button");
+// const button = document.querySelector(".add-form-button");
+
+const API_URL = "https://wedev-api.sky.pro/api/v2/m-m";
+const AUTH_URL = "https://wedev-api.sky.pro/api/user";
+const token =
+  "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
 
 // Получение комментариев
 export const getComments = async () => {
-  return fetch("https://wedev-api.sky.pro/api/v1/maks-muhin/comments", {
+  return fetch(`${API_URL}/comments`, {
     method: "GET",
+    headers: {
+      Authorization: token,
+    },
   }).then((response) => {
     if (response.status === 500) {
       alert("Сервер сломался, попробуй позже");
@@ -16,12 +24,15 @@ export const getComments = async () => {
   });
 };
 
+// Добавление комментария
 export const addComment = (comment, name) => {
-  return fetch("https://wedev-api.sky.pro/api/v1/maks-muhin/comments", {
+  return fetch(`${API_URL}/comments`, {
     method: "POST",
+    headers: {
+      Authorization: token,
+    },
     body: JSON.stringify({
       text: comment,
-      name: name,
     }),
   }).then((response) => {
     if (response.status === 500) {

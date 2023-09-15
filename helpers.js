@@ -1,22 +1,22 @@
-import { renderComments } from './modules/renderComments.js';
+import { renderComments } from "./modules/renderComments.js";
 
 // Получение даты комментария
 export const getDate = (data = null) => {
   const months = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
   ];
-  let result = '';
+  let result = "";
   const date = data ? new Date(data) : new Date();
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -41,17 +41,17 @@ export function delay(interval = 300) {
 
 // добавление обработчика события для лайка
 export const initLikesEventListeners = (comments) => {
-  const likeButtons = document.querySelectorAll('.like-button');
+  const likeButtons = document.querySelectorAll(".like-button");
 
   likeButtons.forEach((likeButton) => {
-    likeButton.addEventListener('click', (e) => toggleLike(e, comments));
+    likeButton.addEventListener("click", (e) => toggleLike(e, comments));
   });
 };
 
 // смена лайка при нажатии
 export const toggleLike = (e, comments) => {
   const target = e.target;
-  const id = target.closest('.comment').dataset.id;
+  const id = target.closest(".comment").dataset.id;
   let comment;
 
   for (let i = 0; i < comments.length; i += 1) {
@@ -60,7 +60,7 @@ export const toggleLike = (e, comments) => {
     }
   }
 
-  target.classList.add('-loading-like');
+  target.classList.add("-loading-like");
 
   delay(2000)
     .then(() => {
@@ -69,6 +69,6 @@ export const toggleLike = (e, comments) => {
       renderComments(comments);
     })
     .finally(() => {
-      target.classList.remove('-loading-like');
+      target.classList.remove("-loading-like");
     });
 };
