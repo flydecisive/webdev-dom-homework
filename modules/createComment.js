@@ -18,7 +18,6 @@ export function createComment(formNameElement, formTextElement, event = null) {
 
   if (eventCode === "Enter" || eventCode === null) {
     const formTextValue = formTextElement.value;
-
     formTextValue === "" || formTextValue.match(/^\s*$/)
       ? formTextElement.classList.add("error")
       : formTextElement.classList.remove("error");
@@ -66,46 +65,6 @@ export function createComment(formNameElement, formTextElement, event = null) {
               initEnterEventListener();
             });
         });
-      // .finally(() => {
-      //   const button = document.querySelector(".add-form-button");
-      //   const formElement = document.querySelector(".add-form");
-      //   const formTextElement = formElement.querySelector(".add-form-text");
-      //   const formNameElement = formElement.querySelector(".add-form-name");
-      //   formTextElement.value = comment;
-      //   formNameElement.value = name;
-
-      //   formNameValue === "" || formNameValue.length < 3
-      //     ? formNameElement.classList.add("error")
-      //     : formNameElement.classList.remove("error");
-
-      //   formTextValue === "" ||
-      //   formTextValue.match(/^\s*$/) ||
-      //   formTextValue.length < 3
-      //     ? formTextElement.classList.add("error")
-      //     : formTextElement.classList.remove("error");
-
-      //   formElement?.addEventListener("keyup", (event) => {
-      //     if (event.code === "Enter") {
-      //       createComment(formNameElement, formTextElement, event);
-      //       getComments();
-      //     }
-      //   });
-
-      //   formElement?.addEventListener("input", () => {
-      //     if (
-      //       (formTextElement.value !== "" &&
-      //         !formTextElement.value.match(/^\s*$/)) ||
-      //       formNameElement.value !== ""
-      //     ) {
-      //       button.classList.remove("disabled");
-      //       button.removeAttribute("disabled");
-      //     }
-      //   });
-
-      //   button?.addEventListener("click", () => {
-      //     createComment(formNameElement, formTextElement);
-      //   });
-      // });
     }
   }
 }

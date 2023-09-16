@@ -16,7 +16,3 @@ export function renderForm() {
         </div>
     `;
 }
-
-// <div class="add-form">
-
-// </div>
