@@ -10,7 +10,6 @@ export function createLoginForm() {
               type="text"
               class="login-form-password"
               placeholder="Пароль"
-              rows="4"
           ></input>
           <div class="login-form-row">
               <button class="login-form-button-login">Войти</button>

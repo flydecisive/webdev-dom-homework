@@ -7,6 +7,7 @@ import {
   initEnterEventListener,
 } from "./modules/events.js";
 import { createLoginForm } from "./modules/createLoginForm.js";
+import { createRegisterForm } from "./modules/createRegisterForm.js";
 
 // Если есть токен то показывать главную страницу, если нет, то показывать страницу аториззации
 
@@ -41,6 +42,7 @@ function renderApp() {
   } else {
     rootEl.innerHTML = createLoginForm();
     initLoginButtonEventListener();
+    initToRegisterButtonEventListener(rootEl);
   }
 }
 
@@ -48,6 +50,15 @@ function initLoginButtonEventListener() {
   const button = document.querySelector(".login-form-button-login");
 
   button.addEventListener("click", () => userLogin());
+}
+
+function initToRegisterButtonEventListener(rootEl) {
+  const button = document.querySelector(".login-form-button-register");
+
+  button.addEventListener("click", () => {
+    console.log(rootEl);
+    rootEl.innerHTML = createRegisterForm();
+  });
 }
 
 function userLogin() {
@@ -89,7 +100,7 @@ function userLogin() {
     })
     .then((responseData) => {
       if (responseData) {
-        user = responseData.user.login;
+        user = responseData.user.name;
         token = responseData.user.token;
       }
     })

@@ -44,12 +44,29 @@ export const addComment = (comment, token) => {
 };
 
 export const login = (login, password) => {
-  console.log(login);
-  console.log(password);
   return fetch(`${AUTH_URL}/login/`, {
     method: "POST",
     body: JSON.stringify({
       login: login,
+      password: password,
+    }),
+  }).then((response) => {
+    if (response.status === 500) {
+      throw new Error("Сервер сломался");
+    } else if (response.status === 400) {
+      throw new Error("Ошибка сервера");
+    } else {
+      return response.json();
+    }
+  });
+};
+
+export const register = (login, password, name) => {
+  return fetch(`${AUTH_URL}`, {
+    method: "POST",
+    body: JSON.stringify({
+      login: login,
+      name: name,
       password: password,
     }),
   }).then((response) => {
