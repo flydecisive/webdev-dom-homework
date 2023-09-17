@@ -11,7 +11,12 @@ import { renderComments } from "./renderComments.js";
 const user = "Admin";
 
 // Создание нового комментария
-export function createComment(formNameElement, formTextElement, event = null) {
+export function createComment(
+  formNameElement,
+  formTextElement,
+  token,
+  event = null
+) {
   const eventCode = event ? event.code : event;
   const button = document.querySelector(".add-form-button");
   let comment;
@@ -29,7 +34,7 @@ export function createComment(formNameElement, formTextElement, event = null) {
       const addForm = document.querySelector(".add-form");
       addForm.innerHTML = "<p>Комментарий добавляется...</p>";
 
-      addComment(comment)
+      addComment(comment, token)
         .catch((error) => {
           if (error.message === "Ошибка сервера") {
             alert("Имя и комментарий должны быть не короче 3 символов");

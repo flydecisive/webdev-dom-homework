@@ -1,5 +1,5 @@
 import { renderMainPage } from "./modules/renderMainPage.js";
-import { getComments } from "./modules/api.js";
+import { getComments, login } from "./modules/api.js";
 import { renderComments } from "./modules/renderComments.js";
 import {
   initButtonEventListener,
@@ -11,17 +11,17 @@ import { createLoginForm } from "./modules/createLoginForm.js";
 // Если есть токен то показывать главную страницу, если нет, то показывать страницу аториззации
 
 let comments;
-let user = "Admin";
-let login = false;
+let user;
+let token;
 
 renderApp();
 
 function renderApp() {
   const rootEl = document.querySelector(".container");
 
-  if (login) {
+  if (token) {
     rootEl.innerHTML = renderMainPage(comments);
-    getComments()
+    getComments(token)
       .then((responseData) => {
         renderComments(responseData.comments);
       })
@@ -34,9 +34,9 @@ function renderApp() {
         const addFormName = document.querySelector(".add-form-name");
         addFormName.value = user;
         addFormName.setAttribute("disabled", true);
-        initButtonEventListener();
+        initButtonEventListener(token);
         initInputEventListener();
-        initEnterEventListener();
+        initEnterEventListener(token);
       });
   } else {
     rootEl.innerHTML = createLoginForm();
@@ -55,6 +55,7 @@ function userLogin() {
   const loginEl = document.querySelector(".login-form-login");
   const passwordEl = document.querySelector(".login-form-password");
   let message = document.querySelector(".error-message");
+
   if (!message) {
     message = document.createElement("p");
     message.classList.add("error-message");
@@ -78,4 +79,21 @@ function userLogin() {
     loginFormEl.appendChild(message);
     return;
   }
+
+  login(loginEl.value, passwordEl.value)
+    .catch((err) => {
+      if (err.message === "Ошибка сервера") {
+        message.textContent = "Неверный логин или пароль";
+        loginFormEl.appendChild(message);
+      }
+    })
+    .then((responseData) => {
+      if (responseData) {
+        user = responseData.user.login;
+        token = responseData.user.token;
+      }
+    })
+    .finally(() => {
+      renderApp();
+    });
 }
