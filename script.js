@@ -1,5 +1,5 @@
 import { renderMainPage } from "./modules/renderMainPage.js";
-import { getComments, login } from "./modules/api.js";
+import { getComments, login, register } from "./modules/api.js";
 import { renderComments } from "./modules/renderComments.js";
 import {
   initButtonEventListener,
@@ -56,8 +56,22 @@ function initToRegisterButtonEventListener(rootEl) {
   const button = document.querySelector(".login-form-button-register");
 
   button.addEventListener("click", () => {
-    console.log(rootEl);
     rootEl.innerHTML = createRegisterForm();
+    initRegisterUserButtonEventListener();
+  });
+}
+
+function initRegisterUserButtonEventListener() {
+  const button = document.querySelector(".register-form-button-register");
+
+  button.addEventListener("click", () => {
+    const login = document.querySelector(".register-form-login").value;
+    const name = document.querySelector(".register-form-name").value;
+    const password = document.querySelector(".register-form-password").value;
+
+    register(login, name, password).then((responseData) => {
+      console.log(responseData);
+    });
   });
 }
 

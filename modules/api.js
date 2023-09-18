@@ -61,7 +61,7 @@ export const login = (login, password) => {
   });
 };
 
-export const register = (login, password, name) => {
+export const register = (login, name, password) => {
   return fetch(`${AUTH_URL}`, {
     method: "POST",
     body: JSON.stringify({
