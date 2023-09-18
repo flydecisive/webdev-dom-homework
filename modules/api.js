@@ -1,15 +1,10 @@
-// import { renderComments } from "./renderComments.js";
-// import { renderForm } from "./renderForm.js";
-
-// const button = document.querySelector(".add-form-button");
+import { token } from "../consts.js";
 
 const API_URL = "https://wedev-api.sky.pro/api/v2/m-m";
 const AUTH_URL = "https://wedev-api.sky.pro/api/user";
-// const token =
-//   "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
 
 // Получение комментариев
-export const getComments = async (token) => {
+export const getComments = async () => {
   return fetch(`${API_URL}/comments`, {
     method: "GET",
     headers: {
@@ -25,7 +20,7 @@ export const getComments = async (token) => {
 };
 
 // Добавление комментария
-export const addComment = (comment, token) => {
+export const addComment = (comment) => {
   return fetch(`${API_URL}/comments`, {
     method: "POST",
     headers: {

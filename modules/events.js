@@ -1,12 +1,15 @@
 import { createComment } from "./createComment.js";
+import { createRegisterForm } from "./createRegisterForm.js";
+import { registerUser } from "./registerUser.js";
+import { userLogin } from "./loginUser.js";
 
-export function initButtonEventListener(token) {
+export function initButtonEventListener() {
   const button = document.querySelector(".add-form-button");
   const formTextElement = document.querySelector(".add-form-text");
   const formNameElement = document.querySelector(".add-form-name");
 
   button.addEventListener("click", () => {
-    createComment(formNameElement, formTextElement, token);
+    createComment(formNameElement, formTextElement);
   });
 }
 
@@ -27,14 +30,37 @@ export function initInputEventListener() {
   });
 }
 
-export function initEnterEventListener(token) {
+export function initEnterEventListener() {
   const formElement = document.querySelector(".add-form");
   const formTextElement = document.querySelector(".add-form-text");
   const formNameElement = document.querySelector(".add-form-name");
 
   formElement.addEventListener("keyup", (event) => {
     if (event.code === "Enter") {
-      createComment(formNameElement, formTextElement, event, token);
+      createComment(formNameElement, formTextElement, event);
     }
+  });
+}
+
+export function initLoginButtonEventListener() {
+  const button = document.querySelector(".login-form-button-login");
+
+  button.addEventListener("click", () => userLogin());
+}
+
+export function initToRegisterButtonEventListener(rootEl) {
+  const button = document.querySelector(".login-form-button-register");
+
+  button.addEventListener("click", () => {
+    rootEl.innerHTML = createRegisterForm();
+    initRegisterUserButtonEventListener();
+  });
+}
+
+export function initRegisterUserButtonEventListener() {
+  const button = document.querySelector(".register-form-button-register");
+
+  button.addEventListener("click", () => {
+    registerUser();
   });
 }
