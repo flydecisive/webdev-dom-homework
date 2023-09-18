@@ -2,6 +2,7 @@ import { createComment } from "./createComment.js";
 import { createRegisterForm } from "./createRegisterForm.js";
 import { registerUser } from "./registerUser.js";
 import { userLogin } from "./loginUser.js";
+import { createLoginForm } from "./createLoginForm.js";
 
 export function initButtonEventListener() {
   const button = document.querySelector(".add-form-button");
@@ -53,14 +54,23 @@ export function initToRegisterButtonEventListener(rootEl) {
 
   button.addEventListener("click", () => {
     rootEl.innerHTML = createRegisterForm();
-    initRegisterUserButtonEventListener();
+    initRegisterUserButtonEventListener(rootEl);
   });
 }
 
-export function initRegisterUserButtonEventListener() {
-  const button = document.querySelector(".register-form-button-register");
+export function initRegisterUserButtonEventListener(rootEl) {
+  const registerButton = document.querySelector(
+    ".register-form-button-register"
+  );
+  const loginButton = document.querySelector(".register-form-button-login");
 
-  button.addEventListener("click", () => {
+  registerButton.addEventListener("click", () => {
     registerUser();
+  });
+
+  loginButton.addEventListener("click", () => {
+    rootEl.innerHTML = createLoginForm();
+    initLoginButtonEventListener();
+    initToRegisterButtonEventListener(rootEl);
   });
 }
