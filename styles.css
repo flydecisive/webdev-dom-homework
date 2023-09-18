@@ -177,7 +177,10 @@ body {
 }
 
 .add-form-button:hover,
-.remove-form-button:hover {
+.remove-form-button:hover, .auth-button:hover,
+.login-form-button-register:hover, .register-form-button-login:hover,
+.login-form-button-login:hover, .register-form-button-register:hover
+{
   opacity: 0.9;
 }
 
@@ -225,4 +228,19 @@ textarea {
 
 .-loading-like {
   animation: rotating 2s linear infinite;
+}
+
+.warn {
+  color: #fff;
+  font-size: 16px;
+}
+
+.auth-button {
+  margin-top: 24px;
+  font-size: 24px;
+  padding: 10px 20px;
+  background-color: #bcec30;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
 }

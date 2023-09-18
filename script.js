@@ -16,7 +16,6 @@ import {
 // Если есть токен то показывать главную страницу, если нет, то показывать страницу аториззации
 
 let comments;
-// let token;
 
 renderApp();
 
@@ -43,8 +42,36 @@ export function renderApp() {
         initEnterEventListener();
       });
   } else {
-    rootEl.innerHTML = createLoginForm();
-    initLoginButtonEventListener();
-    initToRegisterButtonEventListener(rootEl);
+    const comments = document.createElement("div");
+    comments.classList.add("comments");
+    rootEl.appendChild(comments);
+
+    getComments(token)
+      .then((responseData) => {
+        renderComments(responseData.comments);
+      })
+      .catch((error) => {
+        if (error.message === "Failed to fetch") {
+          alert("Кажется, у вас сломался интернет, попробуйте позже");
+        }
+      })
+      .finally(() => {
+        const text = document.createElement("p");
+        text.classList.add("warn");
+        text.textContent =
+          "Только авторизованные пользователи могут оставлять комментарии";
+        rootEl.appendChild(text);
+
+        const authButton = document.createElement("button");
+        authButton.textContent = "Аторизоваться";
+        authButton.classList.add("auth-button");
+        rootEl.appendChild(authButton);
+
+        authButton.addEventListener("click", () => {
+          rootEl.innerHTML = createLoginForm();
+          initLoginButtonEventListener();
+          initToRegisterButtonEventListener(rootEl);
+        });
+      });
   }
 }

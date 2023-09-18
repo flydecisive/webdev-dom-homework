@@ -3,6 +3,7 @@ import { getDate, initLikesEventListeners } from "../helpers.js";
 // рендер комментария
 export const renderComments = (comments) => {
   const commentsEl = document.querySelector(".comments");
+  console.log(commentsEl);
 
   const commentsHtml = comments
     .map((comment) => {
