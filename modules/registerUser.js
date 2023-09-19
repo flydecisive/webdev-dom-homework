@@ -5,6 +5,7 @@ import { register } from "./api.js";
 import { setUser } from "../consts.js";
 
 export function registerUser() {
+  let isAuth = false;
   const registerFormEl = document.querySelector(".register-form");
   const loginEl = document.querySelector(".register-form-login");
   const nameEl = document.querySelector(".register-form-name");
@@ -44,7 +45,8 @@ export function registerUser() {
   register(loginEl.value, nameEl.value, passwordEl.value)
     .catch((err) => {
       if (err.message === "Ошибка сервера") {
-        alert("Пользователь с таким логином или паролем уже существует");
+        message.textContent = "Пользователь с таким логином уже существует";
+        registerFormEl.appendChild(message);
       }
     })
     .then((responseData) => {
@@ -53,9 +55,12 @@ export function registerUser() {
         localStorage.setItem("token", responseData.user.token);
         setUser(responseData.user.name);
         setToken(responseData.user.token);
+        isAuth = true;
       }
     })
     .finally(() => {
-      renderApp();
+      if (isAuth) {
+        renderApp();
+      }
     });
 }
