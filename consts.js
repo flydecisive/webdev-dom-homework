@@ -10,4 +10,10 @@ function setUser(newUser) {
   user = newUser;
 }
 
-export { token, setToken, user, setUser };
+let comments;
+
+function setComments(newComments) {
+  comments = newComments;
+}
+
+export { token, setToken, user, setUser, comments, setComments };

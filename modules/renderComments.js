@@ -1,4 +1,5 @@
-import { getDate, initLikesEventListeners } from "../helpers.js";
+import { getDate } from "../helpers.js";
+import { initLikesEventListeners } from "./events.js";
 
 // рендер комментария
 export const renderComments = (comments) => {
@@ -33,4 +34,5 @@ export const renderComments = (comments) => {
     .join("");
 
   commentsEl.innerHTML = commentsHtml;
+  initLikesEventListeners(comments);
 };

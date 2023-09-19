@@ -43,7 +43,9 @@ export function registerUser() {
 
   register(loginEl.value, nameEl.value, passwordEl.value)
     .catch((err) => {
-      console.log(err);
+      if (err.message === "Ошибка сервера") {
+        alert("Пользователь с таким логином или паролем уже существует");
+      }
     })
     .then((responseData) => {
       if (responseData) {

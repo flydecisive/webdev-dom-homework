@@ -38,6 +38,25 @@ export const addComment = (comment) => {
   });
 };
 
+export const like = (id) => {
+  return fetch(`${API_URL}/comments/${id}/toggle-like`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status === 500) {
+      throw new Error("Сервер сломался");
+    } else if (response.status === 400) {
+      throw new Error("Ошибка сервера");
+    } else if (response.status === 401) {
+      throw new Error("Ошибка авторизации");
+    } else {
+      return response.json();
+    }
+  });
+};
+
 export const login = (login, password) => {
   return fetch(`${AUTH_URL}/login/`, {
     method: "POST",

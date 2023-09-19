@@ -5,6 +5,7 @@ import { userLogin } from "./loginUser.js";
 import { createLoginForm } from "./createLoginForm.js";
 import { setToken, setUser } from "../consts.js";
 import { renderApp } from "../script.js";
+import { toggleLike } from "../helpers.js";
 
 export function initExitButtonEventListener() {
   const button = document.querySelector(".exit-button");
@@ -15,9 +16,18 @@ export function initExitButtonEventListener() {
     localStorage.clear();
     renderApp();
   });
-
-  // Тут нужно будет очищать localstorage
 }
+
+// добавление обработчика события для лайка
+export const initLikesEventListeners = (comments) => {
+  const likeButtons = document.querySelectorAll(".like-button");
+
+  likeButtons.forEach((likeButton) => {
+    likeButton.addEventListener("click", (e) => {
+      toggleLike(e, comments);
+    });
+  });
+};
 
 export function initButtonEventListener() {
   const button = document.querySelector(".add-form-button");

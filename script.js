@@ -8,15 +8,13 @@ import {
   initExitButtonEventListener,
 } from "./modules/events.js";
 import { createLoginForm } from "./modules/createLoginForm.js";
-import { token, user } from "./consts.js";
+import { token, user, comments, setComments } from "./consts.js";
 import {
   initLoginButtonEventListener,
   initToRegisterButtonEventListener,
 } from "./modules/events.js";
 
 // Если есть токен то показывать главную страницу, если нет, то показывать страницу аториззации
-
-let comments;
 
 renderApp();
 
@@ -27,6 +25,7 @@ export function renderApp() {
     rootEl.innerHTML = renderMainPage(comments);
     getComments(token)
       .then((responseData) => {
+        setComments(comments);
         renderComments(responseData.comments);
       })
       .catch((error) => {
@@ -35,7 +34,6 @@ export function renderApp() {
         }
       })
       .finally(() => {
-        console.log(user);
         const addFormName = document.querySelector(".add-form-name");
         addFormName.value = user;
         addFormName.setAttribute("disabled", true);
@@ -52,6 +50,7 @@ export function renderApp() {
 
     getComments(token)
       .then((responseData) => {
+        setComments(comments);
         renderComments(responseData.comments);
       })
       .catch((error) => {
