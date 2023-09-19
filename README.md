@@ -1,9 +1,5 @@
 # Проект "Комментарии"
 
-https://glebkaf.github.io/webdev-dom-homework/
+## Ссылка на проект
 
-Верстка для учебного проекта студентов Skypro
-
-## Как разрабатывать
-
-Открой index.html в браузере
+https://flydecisive.github.io/webdev-dom-homework/
