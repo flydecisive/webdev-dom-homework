@@ -1,5 +1,6 @@
 export function renderMainPage(comments) {
   return `
+      <button class='exit-button'>Выход</button>
       <ul class="comments">
         ${comments ?? '<img class="loader" src="./loader.svg">'}
       </ul>

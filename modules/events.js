@@ -3,6 +3,21 @@ import { createRegisterForm } from "./createRegisterForm.js";
 import { registerUser } from "./registerUser.js";
 import { userLogin } from "./loginUser.js";
 import { createLoginForm } from "./createLoginForm.js";
+import { setToken, setUser } from "../consts.js";
+import { renderApp } from "../script.js";
+
+export function initExitButtonEventListener() {
+  const button = document.querySelector(".exit-button");
+
+  button.addEventListener("click", () => {
+    setToken(null);
+    setUser(null);
+    localStorage.clear();
+    renderApp();
+  });
+
+  // Тут нужно будет очищать localstorage
+}
 
 export function initButtonEventListener() {
   const button = document.querySelector(".add-form-button");

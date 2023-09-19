@@ -47,6 +47,8 @@ export function registerUser() {
     })
     .then((responseData) => {
       if (responseData) {
+        localStorage.setItem("userName", responseData.user.name);
+        localStorage.setItem("token", responseData.user.token);
         setUser(responseData.user.name);
         setToken(responseData.user.token);
       }

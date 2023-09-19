@@ -7,8 +7,7 @@ import {
 } from "./events.js";
 import { renderForm } from "./renderForm.js";
 import { renderComments } from "./renderComments.js";
-
-const user = "Admin";
+import { user } from "../consts.js";
 
 // Создание нового комментария
 export function createComment(

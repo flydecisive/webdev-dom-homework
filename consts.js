@@ -1,10 +1,10 @@
-let token;
+let token = localStorage.getItem("token");
 
 function setToken(newToken) {
   token = newToken;
 }
 
-let user;
+let user = localStorage.getItem("userName");
 
 function setUser(newUser) {
   user = newUser;

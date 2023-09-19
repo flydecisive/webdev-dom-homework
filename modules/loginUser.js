@@ -44,8 +44,9 @@ export function userLogin() {
     .then((responseData) => {
       if (responseData) {
         setToken(responseData.user.token);
-        // user = responseData.user.name;
         setUser(responseData.user.name);
+        localStorage.setItem("userName", responseData.user.name);
+        localStorage.setItem("token", responseData.user.token);
       }
     })
     .finally(() => {

@@ -12,6 +12,7 @@ body {
   padding-bottom: 200px;
   background: #202020;
   min-height: 100vh;
+  position: relative;
 }
 
 .comments,
@@ -156,7 +157,7 @@ body {
   justify-content: flex-end;
 }
 
-.add-form-button, .login-form-button-login, .register-form-button-register {
+.add-form-button, .login-form-button-login, .register-form-button-register, .exit-button {
   margin-top: 24px;
   font-size: 24px;
   padding: 10px 20px;
@@ -179,7 +180,7 @@ body {
 .add-form-button:hover,
 .remove-form-button:hover, .auth-button:hover,
 .login-form-button-register:hover, .register-form-button-login:hover,
-.login-form-button-login:hover, .register-form-button-register:hover
+.login-form-button-login:hover, .register-form-button-register:hover, .exit-button:hover
 {
   opacity: 0.9;
 }
@@ -189,7 +190,13 @@ body {
 }
 
 .disabled {
-  background-color: lightgrey;
+  opacity: 0.4;
+}
+
+.exit-button {
+  position: absolute;
+  top: 0px;
+  right: 15px;
 }
 
 .edit-form-button,

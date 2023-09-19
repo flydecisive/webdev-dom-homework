@@ -5,6 +5,7 @@ import {
   initButtonEventListener,
   initInputEventListener,
   initEnterEventListener,
+  initExitButtonEventListener,
 } from "./modules/events.js";
 import { createLoginForm } from "./modules/createLoginForm.js";
 import { token, user } from "./consts.js";
@@ -34,14 +35,17 @@ export function renderApp() {
         }
       })
       .finally(() => {
+        console.log(user);
         const addFormName = document.querySelector(".add-form-name");
         addFormName.value = user;
         addFormName.setAttribute("disabled", true);
         initButtonEventListener();
         initInputEventListener();
         initEnterEventListener();
+        initExitButtonEventListener();
       });
   } else {
+    rootEl.innerHTML = "";
     const comments = document.createElement("div");
     comments.classList.add("comments");
     rootEl.appendChild(comments);
