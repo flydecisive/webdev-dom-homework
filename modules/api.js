@@ -1,142 +1,95 @@
-import { renderComments } from './renderComments.js';
-import { renderForm } from './renderForm.js';
+import { token } from "../consts.js";
 
-const button = document.querySelector('.add-form-button');
+const API_URL = "https://wedev-api.sky.pro/api/v2/maks-muhin";
+const AUTH_URL = "https://wedev-api.sky.pro/api/user";
 
 // Получение комментариев
-export const getComments = async (comments) => {
-  fetch('https://wedev-api.sky.pro/api/v1/maks-muhin/comments', {
-    method: 'GET',
-  })
-    .then((response) => {
-      if (response.status === 500) {
-        alert('Сервер сломался, попробуй позже');
-      } else {
-        return response.json();
-      }
-    })
-    .then((responseData) => {
-      comments = responseData.comments.map((el) => el);
-      renderComments(comments);
-    })
-    .catch((error) => {
-      if (error.message === 'Failed to fetch') {
-        alert('Кажется, у вас сломался интернет, попробуйте позже');
-      }
-    })
-    .finally(() => {
-      const loader = document.querySelector('.loader');
-      loader?.remove();
-    });
+export const getComments = async () => {
+  return fetch(`${API_URL}/comments`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status === 500) {
+      alert("Сервер сломался, попробуй позже");
+    } else {
+      return response.json();
+    }
+  });
 };
 
-// Создание нового комментария
-export const createComment = (
-  formNameElement,
-  formTextElement,
-  event = null
-) => {
-  const eventCode = event ? event.code : event;
-  let name;
-  let comment;
-  if (eventCode === 'Enter' || eventCode === null) {
-    const formNameValue = formNameElement.value;
-    const formTextValue = formTextElement.value;
-
-    formNameValue === ''
-      ? formNameElement.classList.add('error')
-      : formNameElement.classList.remove('error');
-
-    formTextValue === '' || formTextValue.match(/^\s*$/)
-      ? formTextElement.classList.add('error')
-      : formTextElement.classList.remove('error');
-
-    if (
-      formNameValue !== '' &&
-      formTextValue !== '' &&
-      !formTextValue.match(/^\s*$/)
-    ) {
-      name = formNameValue;
-      comment = formTextValue;
-      button.classList.add('disabled');
-      button.setAttribute('disabled', true);
-      const addForm = document.querySelector('.add-form');
-      addForm.innerHTML = '<p>Комментарий добавляется...</p>';
-
-      fetch('https://wedev-api.sky.pro/api/v1/maks-muhin/comments', {
-        method: 'POST',
-        body: JSON.stringify({
-          text: comment,
-          name: name,
-        }),
-      })
-        .then((response) => {
-          if (response.status === 500) {
-            throw new Error('Сервер сломался');
-          } else if (response.status === 400) {
-            throw new Error('Ошибка сервера');
-          } else {
-            getComments();
-            comment = '';
-            name = '';
-          }
-        })
-        .catch((error) => {
-          if (error.message === 'Ошибка сервера') {
-            alert('Имя и комментарий должны быть не короче 3 символов');
-          } else if (error.message === 'Сервер сломался') {
-            console.log('Сервер сломался, попробуйте позже');
-            alert('Сервер сломался, попробуйте позже');
-            createComment(formNameElement, formTextElement);
-          } else if (error.message === 'Failed to fetch') {
-            alert('Кажется, у вас сломался интернет, попробуйте позже');
-          }
-        })
-        .then(() => {
-          button.classList.remove('disabled');
-          button.removeAttribute('disabled');
-          renderForm(addForm);
-        })
-        .finally(() => {
-          const button = document.querySelector('.add-form-button');
-          const formElement = document.querySelector('.add-form');
-          const formTextElement = formElement.querySelector('.add-form-text');
-          const formNameElement = formElement.querySelector('.add-form-name');
-          formTextElement.value = comment;
-          formNameElement.value = name;
-
-          formNameValue === '' || formNameValue.length < 3
-            ? formNameElement.classList.add('error')
-            : formNameElement.classList.remove('error');
-
-          formTextValue === '' ||
-          formTextValue.match(/^\s*$/) ||
-          formTextValue.length < 3
-            ? formTextElement.classList.add('error')
-            : formTextElement.classList.remove('error');
-
-          formElement?.addEventListener('keyup', (event) => {
-            if (event.code === 'Enter') {
-              createComment(formNameElement, formTextElement, event);
-              getComments();
-            }
-          });
-
-          formElement?.addEventListener('input', () => {
-            if (
-              (formTextElement.value !== '' &&
-                !formTextElement.value.match(/^\s*$/)) ||
-              formNameElement.value !== ''
-            ) {
-              button.classList.remove('disabled');
-              button.removeAttribute('disabled');
-            }
-          });
-
-          button?.addEventListener('click', () => {
-            createComment(formNameElement, formTextElement);
-          });
-        });
+// Добавление комментария
+export const addComment = (comment) => {
+  return fetch(`${API_URL}/comments`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      text: comment,
+    }),
+  }).then((response) => {
+    if (response.status === 500) {
+      throw new Error("Сервер сломался");
+    } else if (response.status === 400) {
+      throw new Error("Ошибка сервера");
     }
-  }
+  });
+};
+
+export const like = (id) => {
+  return fetch(`${API_URL}/comments/${id}/toggle-like`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status === 500) {
+      throw new Error("Сервер сломался");
+    } else if (response.status === 400) {
+      throw new Error("Ошибка сервера");
+    } else if (response.status === 401) {
+      throw new Error("Ошибка авторизации");
+    } else {
+      return response.json();
+    }
+  });
+};
+
+export const login = (login, password) => {
+  return fetch(`${AUTH_URL}/login/`, {
+    method: "POST",
+    body: JSON.stringify({
+      login: login,
+      password: password,
+    }),
+  }).then((response) => {
+    if (response.status === 500) {
+      throw new Error("Сервер сломался");
+    } else if (response.status === 400) {
+      throw new Error("Ошибка сервера");
+    } else {
+      return response.json();
+    }
+  });
+};
+
+export const register = (login, name, password) => {
+  return fetch(`${AUTH_URL}`, {
+    method: "POST",
+    body: JSON.stringify({
+      login: login,
+      name: name,
+      password: password,
+    }),
+  }).then((response) => {
+    if (response.status === 500) {
+      throw new Error("Сервер сломался");
+    } else if (response.status === 400) {
+      throw new Error("Ошибка сервера");
+    } else {
+      return response.json();
+    }
+  });
 };
