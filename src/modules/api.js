@@ -1,4 +1,4 @@
-import { token } from '../../consts.js';
+import { token } from '../consts.js';
 
 const API_URL = 'https://wedev-api.sky.pro/api/v2/maks-muhin';
 const AUTH_URL = 'https://wedev-api.sky.pro/api/user';

@@ -1,6 +1,6 @@
 // Обработка страницы входа
 import { renderApp } from '../script.js';
-import { setToken, setUser } from '../../consts.js';
+import { setToken, setUser } from '../consts.js';
 import { login } from './api.js';
 
 export function userLogin() {

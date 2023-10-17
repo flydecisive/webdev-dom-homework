@@ -37,15 +37,15 @@ export const getDate = (data = null) => {
 export const toggleLike = (e, comments) => {
     const target = e.target;
     const id = target.closest('.comment').dataset.id;
-    let comment;
+    // let comment;
 
-    for (let i = 0; i < comments.length; i += 1) {
-        if (comments[i].id === id) {
-            comment = comments[i];
-        }
-    }
+    // for (let i = 0; i < comments.length; i += 1) {
+    //     if (comments[i].id === id) {
+    //         comment = comments[i];
+    //     }
+    // }
 
-    target.classList.add('-loading-like');
+    target.classList.add('loading-like');
 
     like(id)
         .catch((err) => {
@@ -67,7 +67,7 @@ export const toggleLike = (e, comments) => {
                     renderComments(responseData.comments);
                 })
                 .finally(() => {
-                    target.classList.remove('-loading-like');
+                    target.classList.remove('loading-like');
                 });
         });
 };

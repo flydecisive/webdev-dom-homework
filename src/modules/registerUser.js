@@ -1,8 +1,7 @@
 // Обработка страницы регистрации
-import { setToken } from '../../consts.js';
 import { renderApp } from '../script.js';
 import { register } from './api.js';
-import { setUser } from '../../consts.js';
+import { setUser, setToken } from '../consts.js';
 
 export function registerUser() {
     let isAuth = false;

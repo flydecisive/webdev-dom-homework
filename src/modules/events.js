@@ -3,7 +3,7 @@ import { createRegisterForm } from './createRegisterForm.js';
 import { registerUser } from './registerUser.js';
 import { userLogin } from './loginUser.js';
 import { createLoginForm } from './createLoginForm.js';
-import { setToken, setUser } from '../../consts.js';
+import { setToken, setUser } from '../consts.js';
 import { renderApp } from '../script.js';
 import { toggleLike } from '../helpers.js';
 
