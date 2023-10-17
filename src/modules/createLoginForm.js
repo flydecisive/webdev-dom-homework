@@ -1,5 +1,5 @@
 export function createLoginForm() {
-  return `
+    return `
         <div class="login-form">
           <input
               type="text"
