@@ -1,5 +1,5 @@
 export function createRegisterForm() {
-  return `
+    return `
         <div class="register-form">
             <input
                 type="text"

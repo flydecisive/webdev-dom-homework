@@ -1,5 +1,5 @@
 export function renderForm() {
-  return `
+    return `
         <input
             type="text"
             class="add-form-name"
